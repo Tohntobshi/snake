@@ -12,10 +12,9 @@ int main(int argc, char const *argv[])
 {
   clearGlErrors();
   GameWindow gameWindow = { 640, 480 };
-  World world = { 20.0f, 15.f };
+  World world = { 20.0f, 15.0f };
   Snake snake = { 20, 15 };
   world.addModel("red_square", 1.0f, 0.0f, 0.0f);
-  world.addModel("blue_square", 0.0f, 0.0f, 1.0f);
   world.addModel("green_square", 0.0f, 1.0f, 0.0f);
   while(true) {
     world.clearScreen();

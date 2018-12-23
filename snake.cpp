@@ -51,13 +51,13 @@ void Snake::genFood()
 void Snake::update(int command)
 {
   // change direction
-  if (command == 87 && direction != down)
+  if (command == 26 && direction != down)
     direction = up;
-  else if (command == 83 && direction != up)
+  else if (command == 22 && direction != up)
     direction = down;
-  else if (command == 65 && direction != right)
+  else if (command == 4 && direction != right)
     direction = left;
-  else if (command == 68 && direction != left)
+  else if (command == 7 && direction != left)
     direction = right;
   // move head
   switch (direction)

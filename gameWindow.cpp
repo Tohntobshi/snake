@@ -1,45 +1,46 @@
 #include "gameWindow.h"
+#define GL3_PROTOTYPES 1
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
 
 GameWindow::GameWindow(int width, int height)
 {
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-    window = glfwCreateWindow(width, height, "Hello", nullptr, nullptr);
-    glfwSetKeyCallback(window, keyCallback);
-    glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
-    glewExperimental = GL_TRUE;
-    glewInit();
+  SDL_Init(SDL_INIT_VIDEO);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+  window = SDL_CreateWindow( "SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL );
+  context = SDL_GL_CreateContext(window);
+
+  glewExperimental = GL_TRUE;
+  glewInit();
 }
 GameWindow::~GameWindow()
 {
-  glfwTerminate();
+  SDL_GL_DeleteContext(context);
+	SDL_DestroyWindow(window);
+	SDL_Quit();
 }
 
 void GameWindow::swapBuffers()
 {
-  glfwSwapBuffers(window);
+  SDL_GL_SwapWindow(window);
   
 }
 
 
 int GameWindow::getKey() {
-  glfwPollEvents();
-  int key = lastKey;
-  lastKey = 0;
-  return key;
+  int lastKey = 0;
+  SDL_Event e;
+  while(SDL_PollEvent(&e))
+  {
+    if(e.type == SDL_QUIT) {
+      exit(0);
+    }
+    if(e.type == SDL_KEYDOWN) {
+      
+      lastKey = e.key.keysym.scancode;
+    }
+  }
+  return lastKey;
 }
-
-void GameWindow::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-  lastKey = key;
-}
-
-int GameWindow::lastKey = 0;

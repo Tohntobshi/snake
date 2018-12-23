@@ -1,3 +1,5 @@
+#pragma once
+
 #include <list>
 
 struct occurence {

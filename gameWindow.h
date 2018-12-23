@@ -1,15 +1,15 @@
-typedef struct GLFWwindow GLFWwindow;
+#pragma once
+#include <SDL2/SDL.h>
+
 
 class GameWindow
 {
 private:
-  GLFWwindow *window;
-  
+  SDL_Window* window;
+  SDL_GLContext context;
 public:
-  static int lastKey;
   GameWindow(int width, int height);
   ~GameWindow();
-  static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
   void swapBuffers();
-  static int getKey();
+  int getKey();
 };
