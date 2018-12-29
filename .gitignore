@@ -3,5 +3,6 @@
 /CMakeCache.txt
 /hellogl
 /Makefile
-/a.out.js
-/a.out.wasm
+/dist/a.out.js
+/dist/a.out.wasm
+/.firebase
