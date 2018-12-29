@@ -1,5 +1,5 @@
 #include "world.h"
-#include <GL/glew.h>
+#include <SDL2/SDL_opengles2.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -13,26 +13,24 @@ void checkGLErrors();
 World::World(float width, float height)
 { 
   const char* vertexSource = R"glsl(
-    #version 150 core
-    in vec2 position;
-    in vec3 color;
-    out vec3 Color;
+    attribute vec2 position;
+    attribute vec3 color;
+    varying vec3 Color;
     uniform mat4 viewProj;
     uniform mat4 model;
     void main()
     {
-        Color = color;
-        gl_Position = viewProj * model * vec4(position, 0.0, 1.0);
+      Color = color;
+      gl_Position = viewProj * model * vec4(position, 0.0, 1.0);
     }
   )glsl";
   const char* fragmentSource = R"glsl(
-      #version 150 core
-      in vec3 Color;
-      out vec4 outColor;
-      void main()
-      {
-          outColor = vec4(Color, 1.0);
-      }
+    precision mediump float;
+    varying vec3 Color;
+    void main()
+    {
+      gl_FragColor = vec4(Color, 1.0);
+    }
   )glsl";
   // Create and compile the vertex shader
   vertexShader = glCreateShader(GL_VERTEX_SHADER);

@@ -91,7 +91,7 @@ void Snake::update(int command)
   }
   if (playground[x][y].type == body)
   {
-    exit(1);
+    length = 1;
   }
   // update points
   for (int px = 0; px < width; px++)

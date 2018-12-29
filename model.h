@@ -9,8 +9,10 @@ struct occurence {
 
 class Model
 {
+  private:
+  int positionAttr;
+  int colorAttr;
   public:
-  unsigned int vao;
   std::list<occurence> occurences;
   Model(unsigned int shader, float red, float green, float blue);
   ~Model();

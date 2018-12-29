@@ -1,5 +1,5 @@
 #include "model.h"
-#include <GL/glew.h>
+#include <SDL2/SDL_opengles2.h>
 #include <iostream>
 
 void clearGlErrors();
@@ -8,9 +8,9 @@ void checkGLErrors();
 
 Model::Model(unsigned int shader, float red, float green, float blue)
 {
-  // Create Vertex Array Object
-  glGenVertexArrays(1, &vao);
-  glBindVertexArray(vao);
+  // // Create Vertex Array Object
+  // glGenVertexArrays(1, &vao);
+  // glBindVertexArray(vao);
 
   std::cout << "model constructor call" << std::endl;
   float vertices[] = {
@@ -33,26 +33,29 @@ Model::Model(unsigned int shader, float red, float green, float blue)
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
 
   // Specify the layout of the vertex data
-  int posAttrib = glGetAttribLocation(shader, "position");
-  glEnableVertexAttribArray(posAttrib);
-  glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
+  positionAttr = glGetAttribLocation(shader, "position");
+  glEnableVertexAttribArray(positionAttr);
+  // glVertexAttribPointer(positionAttr, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
   
-  int colorAttrib = glGetAttribLocation(shader, "color");
-  glEnableVertexAttribArray(colorAttrib);
-  glVertexAttribPointer(colorAttrib, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
+  colorAttr = glGetAttribLocation(shader, "color");
+  glEnableVertexAttribArray(colorAttr);
+  // glVertexAttribPointer(colorAttr, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
 }
 
 Model::~Model()
 {
   std::cout << "model destructor call" << std::endl;
-  glDeleteVertexArrays(1, &vao);
+  // glDeleteVertexArrays(1, &vao);
   glDeleteBuffers(1, &ebo);
   glDeleteBuffers(1, &vbo);
 }
 
 void Model::bind()
 {
-  glBindVertexArray(vao);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+  glVertexAttribPointer(positionAttr, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
+  glVertexAttribPointer(colorAttr, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
 }
 
 void Model::draw()

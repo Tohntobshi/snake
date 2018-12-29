@@ -1,12 +1,24 @@
 #include "gameWindow.h"
 #include <iostream>
+#include <functional>
 #include "world.h"
 #include "snake.h"
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#else
 #include <thread>
 #include <chrono>
+#endif
 
 void clearGlErrors();
 void checkGLErrors();
+
+
+std::function<void ()> iterate;
+void callIterate()
+{
+  iterate();
+}
 
 int main(int argc, char const *argv[])
 {
@@ -16,7 +28,8 @@ int main(int argc, char const *argv[])
   Snake snake = { 20, 15 };
   world.addModel("red_square", 1.0f, 0.0f, 0.0f);
   world.addModel("green_square", 0.0f, 1.0f, 0.0f);
-  while(true) {
+  iterate = [&]()
+  {
     world.clearScreen();
     world.clearObjectPositions();
     int key = gameWindow.getKey();
@@ -37,7 +50,14 @@ int main(int argc, char const *argv[])
     }
     world.draw();
     gameWindow.swapBuffers();
+  };
+  #ifdef __EMSCRIPTEN__
+  emscripten_set_main_loop(callIterate, 5, 1);
+  #else
+  while(true) {
+    iterate();
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
   }
+  #endif
   return 0;
 }
